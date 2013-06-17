@@ -85,9 +85,9 @@ static UIBarMetrics DKCalculateNavigationBarMetrics(CGSize navigationBarSize, UI
     } else if(navigationBarSize.height == DKCalculateNavigationBarHeight(barPosition, UIBarMetricsDefaultPrompt)) {
         return UIBarMetricsDefaultPrompt;
     } else if(navigationBarSize.height == DKCalculateNavigationBarHeight(barPosition, UIBarMetricsLandscapePhone)) {
-        return UIBarMetricsDefaultPrompt;
+        return UIBarMetricsLandscapePhone;
     } else if(navigationBarSize.height == DKCalculateNavigationBarHeight(barPosition, UIBarMetricsLandscapePhonePrompt)) {
-        return UIBarMetricsDefaultPrompt;
+        return UIBarMetricsLandscapePhonePrompt;
     } else {
         return UIBarMetricsDefault;
     }
