@@ -251,6 +251,7 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     
     // set up colors
     
+    
     UIColor *fixedColor = DKHSBCompatibleColor(tintColor);
     
     CGFloat topOriginalHue, topOriginalSaturation, topOriginalBrightness, topOriginalAlpha;
@@ -493,7 +494,21 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
 */
 
 - (void)fixShadowImageViewBackgroundColor {
-    [((UIImageView *)(((UIView *)(self.subviews[0])).subviews[1])) setBackgroundColor:[UIColor clearColor]];
+    
+    // some defentive checks
+    
+    if(self.subviews.count > 0) {
+        UIView *navigationBarBackgroundView = self.subviews[0];
+        if([navigationBarBackgroundView isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")]) {
+            if(navigationBarBackgroundView.subviews.count > 1) {
+                UIImageView *shadowImageView = navigationBarBackgroundView.subviews[1];
+                if([shadowImageView isKindOfClass:NSClassFromString(@"UIImageView")]) {
+                    [shadowImageView setBackgroundColor:[UIColor clearColor]];
+                }
+            }
+        }
+    }
+    
 }
 
 #pragma mark - Applying Changes
@@ -552,7 +567,19 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     
     [self setBarTintColor:[UIColor colorWithPatternImage:realBackgroundImage] usingForce:YES];
     
-    [(UIView *)(self.subviews[0]) insertSubview:self.customlyAddedBackgroundImageView belowSubview:((UIView *)([((UIView *)([self subviews][0])) subviews][0]))];
+    // some defensive checks would be a great idea in a beta software
+    
+    if(self.subviews.count > 0) {
+        UIView *navigationBarBackgroundView = self.subviews[0];
+        if([navigationBarBackgroundView isKindOfClass:NSClassFromString(@"_UINavigationBarBackground")]) {
+            if(navigationBarBackgroundView.subviews.count > 0) {
+                UIImageView *shadowImageView = navigationBarBackgroundView.subviews[0];
+                if([shadowImageView isKindOfClass:NSClassFromString(@"UIImageView")]) {
+                    [navigationBarBackgroundView insertSubview:self.customlyAddedBackgroundImageView belowSubview:shadowImageView];
+                }
+            }
+        }
+    }
     
     [self fixShadowImageViewBackgroundColor];
     
