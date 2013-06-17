@@ -47,29 +47,28 @@ static UIColor * DKHSBCompatibleColor(UIColor *fromColor) {
 /*
  
  This function calculates the (most probable) navigation bar
- size based on its position and metrics.
+ height based on its position and metrics.
  
-*/
+ */
 
-static CGSize DKCalculateNavigationBarSize(UIBarPosition position, UIBarMetrics metrics) {
-    
+static CGFloat DKCalculateNavigationBarHeight(UIBarPosition position, UIBarMetrics metrics) {
     if(position == UIBarPositionAny || position == UIBarPositionTop || position == UIBarPositionBottom) {
         if(metrics == UIBarMetricsDefault) {
-            return CGSizeMake(320, 44);
+            return 44.0f;
         } else if(metrics == UIBarMetricsDefaultPrompt) {
-            return CGSizeMake(320, 74);
+            return 74.0f;
         } else if(metrics == UIBarMetricsLandscapePhone) {
-            return CGSizeMake(320, 32);
+            return 32.0f;
         } else if(metrics == UIBarMetricsLandscapePhonePrompt) {
-            return CGSizeMake(320, 74);
+            return 74.0f;
         } else {
-            return CGSizeZero;
+            return 0.0f;
         }
     } else if(position == UIBarPositionTopAttached) {
-        CGSize normalSize = DKCalculateNavigationBarSize(UIBarPositionTop, metrics);
-        return CGSizeMake(normalSize.width, normalSize.height+20);
+        CGFloat normalHeight = DKCalculateNavigationBarHeight(UIBarPositionTop, metrics);
+        return normalHeight + 20.0f;
     } else {
-        return CGSizeZero;
+        return 0.0f;
     }
 }
 
@@ -81,14 +80,14 @@ static CGSize DKCalculateNavigationBarSize(UIBarPosition position, UIBarMetrics 
 */
 
 static UIBarMetrics DKCalculateNavigationBarMetrics(CGSize navigationBarSize, UIBarPosition barPosition) {
-    if(CGSizeEqualToSize(navigationBarSize, DKCalculateNavigationBarSize(barPosition, UIBarMetricsDefault))) {
+    if(navigationBarSize.height == DKCalculateNavigationBarHeight(barPosition, UIBarMetricsDefault)) {
         return UIBarMetricsDefault;
-    } else if(CGSizeEqualToSize(navigationBarSize, DKCalculateNavigationBarSize(barPosition, UIBarMetricsDefaultPrompt))) {
+    } else if(navigationBarSize.height == DKCalculateNavigationBarHeight(barPosition, UIBarMetricsDefaultPrompt)) {
         return UIBarMetricsDefaultPrompt;
-    } else if(CGSizeEqualToSize(navigationBarSize, DKCalculateNavigationBarSize(barPosition, UIBarMetricsLandscapePhone))) {
-        return UIBarMetricsLandscapePhone;
-    } else if(CGSizeEqualToSize(navigationBarSize, DKCalculateNavigationBarSize(barPosition, UIBarMetricsLandscapePhonePrompt))) {
-        return UIBarMetricsLandscapePhonePrompt;
+    } else if(navigationBarSize.height == DKCalculateNavigationBarHeight(barPosition, UIBarMetricsLandscapePhone)) {
+        return UIBarMetricsDefaultPrompt;
+    } else if(navigationBarSize.height == DKCalculateNavigationBarHeight(barPosition, UIBarMetricsLandscapePhonePrompt)) {
+        return UIBarMetricsDefaultPrompt;
     } else {
         return UIBarMetricsDefault;
     }
@@ -106,8 +105,8 @@ UIImage * DKRenderResizableNavigationBarBackgroundImage(NSArray *gradientColors,
     
     // size calculation
     
-    CGSize imageSize = CGSizeMake(2, 64);
-    CGRect imageRect = CGRectMake(0, 0, imageSize.width, imageSize.height);
+    CGSize imageSize = CGSizeMake(2.0f, 64.0f);
+    CGRect imageRect = CGRectMake(0.0f, 0.0f, imageSize.width, imageSize.height);
     
     // convert the arguments to CG-friendly values
     
@@ -155,9 +154,9 @@ UIImage * DKRenderResizableNavigationBarBackgroundImage(NSArray *gradientColors,
     
     [topSeparators enumerateObjectsUsingBlock:^(UIColor *color, NSUInteger idx, BOOL *stop) {
         CGContextSetStrokeColorWithColor(context, color.CGColor);
-        CGContextSetLineWidth(context, 1.0);
-        CGContextMoveToPoint(context, CGRectGetMinX(imageRect), CGRectGetMinY(imageRect) + 0.5 + idx);
-        CGContextAddLineToPoint(context, CGRectGetMaxX(imageRect), CGRectGetMinY(imageRect) + 0.5 + idx);
+        CGContextSetLineWidth(context, 1.0f);
+        CGContextMoveToPoint(context, CGRectGetMinX(imageRect), CGRectGetMinY(imageRect) + 0.5f + (CGFloat)idx);
+        CGContextAddLineToPoint(context, CGRectGetMaxX(imageRect), CGRectGetMinY(imageRect) + 0.5f + (CGFloat)idx);
         CGContextStrokePath(context);
     }];
     
@@ -165,9 +164,9 @@ UIImage * DKRenderResizableNavigationBarBackgroundImage(NSArray *gradientColors,
     
     [bottomSeparators enumerateObjectsUsingBlock:^(UIColor *color, NSUInteger idx, BOOL *stop) {
         CGContextSetStrokeColorWithColor(context, color.CGColor);
-        CGContextSetLineWidth(context, 1.0);
-        CGContextMoveToPoint(context, CGRectGetMinX(imageRect), CGRectGetMaxY(imageRect) - 0.5 - idx);
-        CGContextAddLineToPoint(context, CGRectGetMaxX(imageRect), CGRectGetMaxY(imageRect) - 0.5 - idx);
+        CGContextSetLineWidth(context, 1.0f);
+        CGContextMoveToPoint(context, CGRectGetMinX(imageRect), CGRectGetMaxY(imageRect) - 0.5f - (CGFloat)idx);
+        CGContextAddLineToPoint(context, CGRectGetMaxX(imageRect), CGRectGetMaxY(imageRect) - 0.5f - (CGFloat)idx);
         CGContextStrokePath(context);
     }];
     
@@ -176,7 +175,7 @@ UIImage * DKRenderResizableNavigationBarBackgroundImage(NSArray *gradientColors,
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    return [image resizableImageWithCapInsets:UIEdgeInsetsMake((CGFloat)(topSeparators.count), 0, (CGFloat)(bottomSeparators.count), 0) resizingMode:UIImageResizingModeStretch];
+    return [image resizableImageWithCapInsets:UIEdgeInsetsMake((CGFloat)(topSeparators.count), 0.0f, (CGFloat)(bottomSeparators.count), 0.0f) resizingMode:UIImageResizingModeStretch];
     
 }
 
@@ -200,12 +199,12 @@ UIImage * DKRenderResizableNavigationBarShadow(UIColor *shadowColor, CGFloat top
     
     // size calculation
     
-    CGSize imageSize = CGSizeMake(2, shadowHeight);
-    CGRect imageRect = CGRectMake(0, 0, imageSize.width, imageSize.height);
+    CGSize imageSize = CGSizeMake(2.0f, shadowHeight);
+    CGRect imageRect = CGRectMake(0.0f, 0.0f, imageSize.width, imageSize.height);
     
     // gradient creation
     
-    CGFloat gradientLocations[] = {0.0, 1.0};
+    CGFloat gradientLocations[] = {0.0f, 1.0f};
     NSArray *gradientColors = @[ (__bridge id)(topColor.CGColor), (__bridge id)(bottomColor.CGColor) ];
     
     CGColorSpaceRef gradientColorSpace = CGColorSpaceCreateDeviceRGB();
@@ -236,7 +235,7 @@ UIImage * DKRenderResizableNavigationBarShadow(UIColor *shadowColor, CGFloat top
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    return [image resizableImageWithCapInsets:UIEdgeInsetsMake(0, 0, 0, 0) resizingMode:UIImageResizingModeStretch];
+    return [image resizableImageWithCapInsets:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f) resizingMode:UIImageResizingModeStretch];
     
 }
 
@@ -258,9 +257,9 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     [fixedColor getHue:&topOriginalHue saturation:&topOriginalSaturation brightness:&topOriginalBrightness alpha:&topOriginalAlpha];
     
     CGFloat topModifiedHue = topOriginalHue;
-    CGFloat topModifiedSaturation = (topOriginalSaturation > 0.2) ? topOriginalSaturation - 0.2 : 0.0;
-    CGFloat topModifiedBrightness = (topOriginalBrightness < 0.7) ? topOriginalBrightness + 0.3 : 1.0;
-    CGFloat topModifiedAlpha = (topOriginalAlpha > 0.05) ? topOriginalAlpha - 0.05 : 0.0;
+    CGFloat topModifiedSaturation = (topOriginalSaturation > 0.2f) ? topOriginalSaturation - 0.2f : 0.0f;
+    CGFloat topModifiedBrightness = (topOriginalBrightness < 0.7f) ? topOriginalBrightness + 0.3f : 1.0f;
+    CGFloat topModifiedAlpha = (topOriginalAlpha > 0.05f) ? topOriginalAlpha - 0.05f : 0.0f;
     
     UIColor *tintedTopColor = [UIColor colorWithHue:topModifiedHue saturation:topModifiedSaturation brightness:topModifiedBrightness alpha:topModifiedAlpha];
     
@@ -272,7 +271,7 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     CGFloat bottomModifiedHue = bottomOriginalHue;
     CGFloat bottomModifiedSaturation = bottomOriginalSaturation;
     CGFloat bottomModifiedBrightness = bottomOriginalBrightness;
-    CGFloat bottomModifiedAlpha = (bottomOriginalAlpha > 0.15) ? bottomOriginalAlpha - 0.15 : 0.0;
+    CGFloat bottomModifiedAlpha = (bottomOriginalAlpha > 0.15f) ? bottomOriginalAlpha - 0.15f : 0.0f;
     
     UIColor *tintedBottomColor = [UIColor colorWithHue:bottomModifiedHue saturation:bottomModifiedSaturation brightness:bottomModifiedBrightness alpha:bottomModifiedAlpha];
     
@@ -282,9 +281,9 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     [fixedColor getHue:&firstTopSeparatorOriginalHue saturation:&firstTopSeparatorOriginalSaturation brightness:&firstTopSeparatorOriginalBrightness alpha:&firstTopSeparatorOriginalAlpha];
     
     CGFloat firstTopSeparatorModifiedHue = firstTopSeparatorOriginalHue;
-    CGFloat firstTopSeparatorModifiedSaturation = (firstTopSeparatorOriginalSaturation > 0.3) ? firstTopSeparatorOriginalSaturation - 0.3 : 0.0;
-    CGFloat firstTopSeparatorModifiedBrightness = (firstTopSeparatorOriginalBrightness < 0.6) ? firstTopSeparatorOriginalBrightness + 0.6 : 1.0;
-    CGFloat firstTopSeparatorModifiedAlpha = (firstTopSeparatorOriginalAlpha > 0.3) ? firstTopSeparatorOriginalAlpha - 0.3 : 1.0;
+    CGFloat firstTopSeparatorModifiedSaturation = (firstTopSeparatorOriginalSaturation > 0.3f) ? firstTopSeparatorOriginalSaturation - 0.3f : 0.0f;
+    CGFloat firstTopSeparatorModifiedBrightness = (firstTopSeparatorOriginalBrightness < 0.6f) ? firstTopSeparatorOriginalBrightness + 0.6f : 1.0f;
+    CGFloat firstTopSeparatorModifiedAlpha = (firstTopSeparatorOriginalAlpha > 0.3f) ? firstTopSeparatorOriginalAlpha - 0.3f : 1.0f;
     
     UIColor *tintedFirstTopSeparatorColor = [UIColor colorWithHue:firstTopSeparatorModifiedHue saturation:firstTopSeparatorModifiedSaturation brightness:firstTopSeparatorModifiedBrightness alpha:firstTopSeparatorModifiedAlpha];
     
@@ -294,9 +293,9 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     [fixedColor getHue:&firstBottomSeparatorOriginalHue saturation:&firstBottomSeparatorOriginalSaturation brightness:&firstBottomSeparatorOriginalBrightness alpha:&firstBottomSeparatorOriginalAlpha];
     
     CGFloat firstBottomSeparatorModifiedHue = firstBottomSeparatorOriginalHue;
-    CGFloat firstBottomSeparatorModifiedSaturation = (firstBottomSeparatorOriginalSaturation > 0.4) ? firstBottomSeparatorOriginalSaturation - 0.4 : 0.0;
-    CGFloat firstBottomSeparatorModifiedBrightness = (firstBottomSeparatorOriginalBrightness < 0.6) ? firstBottomSeparatorOriginalBrightness + 0.4 : 1.0;
-    CGFloat firstBottomSeparatorModifiedAlpha = (firstBottomSeparatorOriginalAlpha > 0.55) ? firstBottomSeparatorOriginalAlpha - 0.55 : 0.0;
+    CGFloat firstBottomSeparatorModifiedSaturation = (firstBottomSeparatorOriginalSaturation > 0.4f) ? firstBottomSeparatorOriginalSaturation - 0.4f : 0.0f;
+    CGFloat firstBottomSeparatorModifiedBrightness = (firstBottomSeparatorOriginalBrightness < 0.6f) ? firstBottomSeparatorOriginalBrightness + 0.4f : 1.0f;
+    CGFloat firstBottomSeparatorModifiedAlpha = (firstBottomSeparatorOriginalAlpha > 0.55f) ? firstBottomSeparatorOriginalAlpha - 0.55f : 0.0f;
     
     UIColor *tintedFirstBottomSeparatorColor = [UIColor colorWithHue:firstBottomSeparatorModifiedHue saturation:firstBottomSeparatorModifiedSaturation brightness:firstBottomSeparatorModifiedBrightness alpha:firstBottomSeparatorModifiedAlpha];
     
@@ -307,14 +306,14 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     
     CGFloat secondBottomSeparatorModifiedHue = secondBottomSeparatorOriginalHue;
     CGFloat secondBottomSeparatorModifiedSaturation = secondBottomSeparatorOriginalSaturation;
-    CGFloat secondBottomSeparatorModifiedBrightness = (secondBottomSeparatorOriginalBrightness > 0.4) ? secondBottomSeparatorOriginalBrightness - 0.4 : 0.0;
-    CGFloat secondBottomSeparatorModifiedAlpha = (secondBottomSeparatorOriginalAlpha > 0.2) ? secondBottomSeparatorOriginalAlpha - 0.2 : 0.0;
+    CGFloat secondBottomSeparatorModifiedBrightness = (secondBottomSeparatorOriginalBrightness > 0.4f) ? secondBottomSeparatorOriginalBrightness - 0.4f : 0.0f;
+    CGFloat secondBottomSeparatorModifiedAlpha = (secondBottomSeparatorOriginalAlpha > 0.2f) ? secondBottomSeparatorOriginalAlpha - 0.2f : 0.0f;
     
     UIColor *tintedSecondBottomSeparatorColor = [UIColor colorWithHue:secondBottomSeparatorModifiedHue saturation:secondBottomSeparatorModifiedSaturation brightness:secondBottomSeparatorModifiedBrightness alpha:secondBottomSeparatorModifiedAlpha];
     
     // obtain and return the image
     
-    UIImage *image = DKRenderResizableNavigationBarBackgroundImage(@[ tintedTopColor, tintedBottomColor ], @[ @(0.0), @(1.0) ], @[ tintedFirstTopSeparatorColor ], @[ tintedSecondBottomSeparatorColor, tintedFirstBottomSeparatorColor ]);
+    UIImage *image = DKRenderResizableNavigationBarBackgroundImage(@[ tintedTopColor, tintedBottomColor ], @[ @(0.0f), @(1.0f) ], @[ tintedFirstTopSeparatorColor ], @[ tintedSecondBottomSeparatorColor, tintedFirstBottomSeparatorColor ]);
     
     return image;
     
