@@ -313,7 +313,7 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     
     // obtain and return the image
     
-    UIImage *image = DKRenderResizableNavigationBarBackgroundImage(@[ tintedTopColor, tintedBottomColor ], @[ @(0.0f), @(1.0f) ], @[ tintedFirstTopSeparatorColor ], @[ tintedSecondBottomSeparatorColor, tintedFirstBottomSeparatorColor ]);
+    UIImage *image = DKRenderResizableNavigationBarBackgroundImage(@[ tintedTopColor, tintedBottomColor ], @[ @(0.1f), @(1.0f) ], @[ tintedFirstTopSeparatorColor ], @[ tintedSecondBottomSeparatorColor, tintedFirstBottomSeparatorColor ]);
     
     return image;
     
@@ -333,9 +333,6 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
 
 - (void)setBarTintColor:(UIColor *)barTintColor usingForce:(BOOL)force;
 - (UIColor *)barTintColorUsingForce:(BOOL)force;
-
-- (void)setTintColor:(UIColor *)tintColor usingForce:(BOOL)force;
-- (UIColor *)tintColorUsingForce:(BOOL)force;
 
 - (void)fixShadowImageViewBackgroundColor;
 
@@ -453,31 +450,6 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     }
 }
 
-- (void)setTintColor:(UIColor *)tintColor {
-    [self setTintColor:tintColor usingForce:NO];
-}
-
-- (UIColor *)tintColor {
-    return [self tintColorUsingForce:NO];
-}
-
-- (void)setTintColor:(UIColor *)tintColor usingForce:(BOOL)force {
-    if(force) {
-        [super setTintColor:tintColor];
-    } else {
-        [self.storageNavigationBar setTintColor:tintColor];
-        [self setNeedsUpdateAppearance];
-    }
-}
-
-- (UIColor *)tintColorUsingForce:(BOOL)force {
-    if(force) {
-        return [super tintColor];
-    } else {
-        return [self.storageNavigationBar tintColor];
-    }
-}
-
 #pragma mark - Shadow Image View Fix
 
 /*
@@ -576,6 +548,8 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
                 if([shadowImageView isKindOfClass:NSClassFromString(@"UIImageView")]) {
                     [navigationBarBackgroundView insertSubview:self.customlyAddedBackgroundImageView belowSubview:shadowImageView];
                 }
+            } else {
+                [navigationBarBackgroundView insertSubview:self.customlyAddedBackgroundImageView atIndex:0];
             }
         }
     }
@@ -662,7 +636,7 @@ static UIImage * DKRenderResizableTintedNavigationBarBackgroundImage(UIColor *ti
     
     // set tint colors
     
-    [self setTintColor:defaultTintColor usingForce:NO];
+    [self setTintColor:defaultTintColor];
     [self setBarTintColor:defaultBarTintColor usingForce:NO];
     
     // set default shadow image
