@@ -15,6 +15,8 @@
 		3A41C0FC176C737B00612DDD /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A41C0FB176C737B00612DDD /* MapKit.framework */; };
 		3A41C0FD176C773300612DDD /* DKNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A179FA81768FB6E0093F507 /* DKNavigationBar.m */; };
 		3A41C103176CA9BC00612DDD /* DKNavigationBarTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A41C102176CA9BA00612DDD /* DKNavigationBarTests.m */; };
+		3A8F8AE8176E1320004BB145 /* DKToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A8F8AE6176E128F004BB145 /* DKToolbar.m */; };
+		3AA14D08176F8E8200F05F89 /* DKToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 3A8F8AE6176E128F004BB145 /* DKToolbar.m */; };
 		3AC87032176B66410011A527 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A14A61B1768D6D100D9C3E0 /* Foundation.framework */; };
 		3AC87034176B66410011A527 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AC87033176B66410011A527 /* CoreGraphics.framework */; };
 		3AC87035176B66410011A527 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A14A61D1768D6DF00D9C3E0 /* UIKit.framework */; };
@@ -38,6 +40,8 @@
 		3A41C0F9176C735800612DDD /* AKMapsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AKMapsViewController.m; sourceTree = "<group>"; };
 		3A41C0FB176C737B00612DDD /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		3A41C102176CA9BA00612DDD /* DKNavigationBarTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DKNavigationBarTests.m; sourceTree = "<group>"; };
+		3A8F8AE5176E128F004BB145 /* DKToolbar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DKToolbar.h; sourceTree = "<group>"; };
+		3A8F8AE6176E128F004BB145 /* DKToolbar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DKToolbar.m; sourceTree = "<group>"; };
 		3AC87031176B66410011A527 /* DamnKit Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "DamnKit Demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AC87033176B66410011A527 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		3AC8705F176B67520011A527 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = "<group>"; };
@@ -139,8 +143,7 @@
 		3A14A6201768D79E00D9C3E0 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				3A179FA71768FB6E0093F507 /* DKNavigationBar.h */,
-				3A179FA81768FB6E0093F507 /* DKNavigationBar.m */,
+				3A8F8AE9176E22CE004BB145 /* Bars & Bar Items */,
 				3AC8706E176B68990011A527 /* DKWindow.h */,
 				3AC8706F176B68990011A527 /* DKWindow.m */,
 			);
@@ -160,6 +163,17 @@
 				3A41C102176CA9BA00612DDD /* DKNavigationBarTests.m */,
 			);
 			path = "Test Cases";
+			sourceTree = "<group>";
+		};
+		3A8F8AE9176E22CE004BB145 /* Bars & Bar Items */ = {
+			isa = PBXGroup;
+			children = (
+				3A179FA71768FB6E0093F507 /* DKNavigationBar.h */,
+				3A179FA81768FB6E0093F507 /* DKNavigationBar.m */,
+				3A8F8AE5176E128F004BB145 /* DKToolbar.h */,
+				3A8F8AE6176E128F004BB145 /* DKToolbar.m */,
+			);
+			name = "Bars & Bar Items";
 			sourceTree = "<group>";
 		};
 		3AC8705C176B671C0011A527 /* DamnKit Demo */ = {
@@ -233,7 +247,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3AC8705A176B66410011A527 /* Build configuration list for PBXNativeTarget "DamnKit Demo" */;
 			buildPhases = (
-				3AC87072176B6ABA0011A527 /* ShellScript */,
 				3AC8702D176B66410011A527 /* Sources */,
 				3AC8702E176B66410011A527 /* Frameworks */,
 				3AC8702F176B66410011A527 /* Resources */,
@@ -297,28 +310,12 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		3AC87072176B6ABA0011A527 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$((0x$buildNumber))\nbuildNumber=$(($buildNumber + 1))\nbuildNumber=$(printf \"%X\" $buildNumber)\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		3A14A5FC1768D63700D9C3E0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A8F8AE8176E1320004BB145 /* DKToolbar.m in Sources */,
 				3A41C103176CA9BC00612DDD /* DKNavigationBarTests.m in Sources */,
 				3A179FAB1768FB730093F507 /* DKNavigationBar.m in Sources */,
 				3AC87071176B68A00011A527 /* DKWindow.m in Sources */,
@@ -329,6 +326,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3AA14D08176F8E8200F05F89 /* DKToolbar.m in Sources */,
 				3AC87065176B675B0011A527 /* DamnKit-Demo-Main.m in Sources */,
 				3A41C0FA176C736A00612DDD /* AKMapsViewController.m in Sources */,
 				3AC8706A176B67D80011A527 /* AKApplicationDelegate.m in Sources */,

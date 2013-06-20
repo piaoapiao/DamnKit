@@ -10,6 +10,8 @@
 #define _DAMNKIT_H
 
 #import "DKWindow.h"
+
 #import "DKNavigationBar.h"
+#import "DKToolbar.h"
 
 #endif

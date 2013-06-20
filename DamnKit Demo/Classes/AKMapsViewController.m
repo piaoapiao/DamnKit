@@ -22,12 +22,14 @@
     self.edgesForExtendedLayout = UIExtendedEdgeAll;
     self.mapView = [[MKMapView alloc] initWithFrame:self.view.bounds];
     self.mapView.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-//    self.mapView.mapType = MKMapTypeHybrid;
     [self.view addSubview:self.mapView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-//    UIColor *color = [UIColor colorWithWhite:0.950 alpha:1.000]; // default
+    
+    [super viewWillAppear:animated];
+    
+    UIColor *color = [UIColor colorWithWhite:0.950 alpha:1.000]; // default
 //    UIColor *color = [UIColor colorWithHue:0.988 saturation:0.328 brightness:0.996 alpha:1.000]; // pink
 //    UIColor *color = [UIColor colorWithHue:0.543 saturation:0.379 brightness:0.945 alpha:1.000]; // blue
 //    UIColor *color = [UIColor colorWithHue:0.271 saturation:0.463 brightness:0.872 alpha:1.000]; // green
@@ -37,19 +39,18 @@
 //    UIColor *color = [UIColor colorWithHue:0.097 saturation:0.561 brightness:1.000 alpha:1.000]; // orange
 //    UIColor *color = [UIColor colorWithHue:0.550 saturation:0.246 brightness:0.937 alpha:1.000]; // ocean
 //    UIColor *color = [UIColor colorWithWhite:0.300 alpha:1.000]; // darker
-//    self.navigationController.navigationBar.barTintColor = color;
-}
-
-- (void)viewDidLoad {
-    self.title = @"Map View";
-
+    self.navigationController.navigationBar.barTintColor = color;
+    
+    self.toolbarItems = @[ [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemBookmarks target:nil action:nil] ];
+    self.navigationController.toolbarHidden = NO;
     
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidLoad {
+    
+    [super viewDidLoad];
+    
+    self.title = @"Map View";
 }
 
 @end
