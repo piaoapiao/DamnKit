@@ -26,38 +26,50 @@
     [super tearDown];
 }
 
-- (void)testNavigationBarDefaultTranslucent {
+- (void)testIsTranslucentByDefault {
     DKNavigationBar *bar = [[DKNavigationBar alloc] initWithFrame:CGRectZero];
     XCTAssertTrue(bar.translucent, @"DKNavigationBar should be translucent by default");
 }
 
-- (void)testNavigationBarDefaultBarTintColor {
-    DKNavigationBar *bar = [[DKNavigationBar alloc] initWithFrame:CGRectZero];
-    UIColor *color = [UIColor colorWithWhite:0.950 alpha:1.000];
-    XCTAssertEqualObjects(bar.barTintColor, color, @"DKNavigationBar should have the barTintColor of (W:0.950 A:1.000) by default");
-}
-
-- (void)testNavigationBarDefaultTintColor {
-    DKNavigationBar *bar = [[DKNavigationBar alloc] initWithFrame:CGRectZero];
-    UIColor *color = [UIColor colorWithHue:0.571 saturation:0.107 brightness:0.514 alpha:1.000];
-    XCTAssertEqualObjects(bar.tintColor, color, @"DKNavigationBar should have the tintColor of (H:0.571 S:0.107 B:0.514 A:1.000) by default");
-}
-
-- (void)testNavigationBarDefaultTitleTextAttributes {
-    UIColor *defaultTitleTextGrayColor = [UIColor colorWithHue:0.571 saturation:0.107 brightness:0.514 alpha:1.000];
-    NSShadow *defaultTitleTextWhiteShadow = [[NSShadow alloc] init];
-    [defaultTitleTextWhiteShadow setShadowColor:[UIColor colorWithWhite:1.000 alpha:0.900]];
-    [defaultTitleTextWhiteShadow setShadowOffset:CGSizeMake(0, 1)];
-    UIFont *defaultTitleTextBoldFont = [UIFont fontWithName:@"HelveticaNeue-Bold" size:20];
-    NSDictionary *attributes = @{ NSFontAttributeName : defaultTitleTextBoldFont, NSForegroundColorAttributeName : defaultTitleTextGrayColor, NSShadowAttributeName : defaultTitleTextWhiteShadow };
-    DKNavigationBar *bar = [[DKNavigationBar alloc] initWithFrame:CGRectZero];
-    XCTAssertEqualObjects([bar titleTextAttributes], attributes, @"DKNavigationBar attributes should be \"default\" by default");
-}
-
 - (void)testAppearanceProxyCompatability {
+    
+    UIColor *barTintColor = [UIColor redColor];
+    UIColor *tintColor = [UIColor greenColor];
+    
+    NSShadow *titleTextShadow = [[NSShadow alloc] init];
+    [titleTextShadow setShadowColor:[UIColor colorWithWhite:0.000 alpha:0.900]];
+    [titleTextShadow setShadowOffset:CGSizeMake(0, -4)];
+    
+    UIFont *titleTextFont = [UIFont fontWithName:@"HelveticaNeue-Bold" size:40];
+    
+    NSDictionary *titleTextAtts = @{ NSFontAttributeName : titleTextFont, NSForegroundColorAttributeName : tintColor, NSShadowAttributeName : titleTextShadow };
+    
+    UIImage *shadowImage = DKRenderResizableNavigationBarShadow([UIColor blueColor], 1, 5);
+    
     DKNavigationBar *barApp = [DKNavigationBar appearanceWhenContainedIn:[_DKNavigationBarTestsAppearanceContainingNavigationController class], nil];
     
+    [barApp setBarTintColor:barTintColor];
+    [barApp setTintColor:tintColor];
+    [barApp setTitleTextAttributes:titleTextAtts];
+    [barApp setShadowImage:shadowImage];
     
+    _DKNavigationBarTestsAppearanceContainingNavigationController *navCtrlr = [[_DKNavigationBarTestsAppearanceContainingNavigationController alloc] initWithNavigationBarClass:[DKNavigationBar class] toolbarClass:[UIToolbar class]];
+    
+    UIWindow *window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    window.rootViewController = navCtrlr;
+    [window makeKeyAndVisible];
+    
+    UIColor *barTintColor2 = [navCtrlr.navigationBar barTintColor];
+    XCTAssertEqualObjects(barTintColor, barTintColor2, @"barTintColor should be preserved by UIAppearance proxy");
+    
+    UIColor *tintColor2 = [navCtrlr.navigationBar tintColor];
+    XCTAssertEqualObjects(tintColor, tintColor2, @"tintColor should be preserved by UIAppearance proxy");
+    
+    NSDictionary *titleTextAtts2 = [navCtrlr.navigationBar titleTextAttributes];
+    XCTAssertEqualObjects(titleTextAtts, titleTextAtts2, @"titleTextAttributes should be preserved by UIAppearance proxy");
+    
+    UIImage *shadowImage2 = [navCtrlr.navigationBar shadowImage];
+    XCTAssertEqualObjects(shadowImage, shadowImage2, @"shadowImage should be preserved by UIAppearance proxy");
     
 }
 
